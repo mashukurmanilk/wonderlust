@@ -76,7 +76,7 @@ export default function HomePage() {
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
             <Link
-              href="/destinations"
+              href="/explore"
               className="bg-[#00A9B5] hover:bg-[#00929c] text-white px-7 py-3 rounded-md text-sm font-semibold tracking-wide flex items-center gap-2 transition-transform transform active:scale-95 shadow-lg"
             >
               <span>EXPLORE NOW</span>
@@ -173,7 +173,7 @@ export default function HomePage() {
             </p>
           </div>
           <Link
-            href="/destinations"
+            href="/explore"
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#00A9B5] hover:text-[#008f9a] transition-colors self-start md:self-auto"
           >
             <span>SEE ALL DESTINATIONS</span>

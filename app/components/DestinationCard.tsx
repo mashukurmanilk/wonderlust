@@ -49,7 +49,10 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
   const destinationId = destination._id || "1";
 
   return (
-    <div className="group flex flex-col bg-white rounded-xl overflow-hidden transition-all duration-300">
+    <Link
+      href={`/destinations/${destinationId}`}
+      className="group flex flex-col bg-white rounded-xl overflow-hidden transition-all duration-300 hover:shadow-md cursor-pointer"
+    >
       {/* Destination Image with Rating Pill */}
       <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-gray-100">
         <Image
@@ -94,17 +97,14 @@ export default function DestinationCard({ destination }: DestinationCardProps) {
           <span>{duration}</span>
         </div>
 
-        {/* Book Now Link */}
+        {/* Book Now Button */}
         <div className="pt-2">
-          <Link
-            href={`/destinations/${destinationId}`}
-            className="inline-flex items-center gap-1 text-xs font-bold text-[#00A9B5] hover:text-[#008f9a] tracking-wider transition-colors"
-          >
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-[#00A9B5] group-hover:text-[#008f9a] tracking-wider transition-colors">
             <span>BOOK NOW</span>
             <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

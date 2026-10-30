@@ -2,10 +2,26 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { User, Menu, X } from "lucide-react";
+import { User, Menu, X, LogOut } from "lucide-react";
+import { useSession, signOut } from "../lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: session, isPending } = useSession();
+  const router = useRouter();
+
+  const user = (session as any)?.user;
+
+  const handleSignOut = async () => {
+    try {
+      await (signOut as any)();
+    } catch (e) {
+      console.error(e);
+    }
+    router.push("/");
+    router.refresh();
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all">
@@ -47,27 +63,43 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Right Action Buttons */}
+          {/* Right Action Buttons (Desktop) */}
           <div className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link
-              href="/profile"
-              className="flex items-center gap-2 text-gray-700 hover:text-[#00A9B5] transition-colors"
-            >
-              <User className="w-4 h-4" />
-              <span>Profile</span>
-            </Link>
-            <Link
-              href="/login"
-              className="text-gray-700 hover:text-[#00A9B5] transition-colors"
-            >
-              Login
-            </Link>
-            <Link
-              href="/signup"
-              className="bg-[#00A9B5] hover:bg-[#008f9a] text-white px-5 py-2 rounded-md font-semibold transition-colors shadow-sm"
-            >
-              Sign Up
-            </Link>
+            {isPending ? (
+              <div className="h-8 w-24 bg-gray-100 animate-pulse rounded-md" />
+            ) : user ? (
+              <>
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-2 text-gray-700 hover:text-[#00A9B5] transition-colors font-semibold"
+                >
+                  <User className="w-4 h-4 text-[#00A9B5]" />
+                  <span>{user.name || "Profile"}</span>
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-1.5 text-gray-600 hover:text-red-500 transition-colors cursor-pointer"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-gray-700 hover:text-[#00A9B5] transition-colors"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/signup"
+                  className="bg-[#00A9B5] hover:bg-[#008f9a] text-white px-5 py-2 rounded-md font-semibold transition-colors shadow-sm"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Hamburger Button */}
@@ -114,29 +146,47 @@ export default function Navbar() {
           >
             Admin
           </Link>
+
           <div className="border-t border-gray-100 pt-3 flex flex-col gap-3">
-            <Link
-              href="/profile"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2 text-gray-700 py-1"
-            >
-              <User className="w-4 h-4" />
-              <span>Profile</span>
-            </Link>
-            <Link
-              href="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-gray-700 py-1"
-            >
-              Login
-            </Link>
-            <Link
-              href="/signup"
-              onClick={() => setMobileMenuOpen(false)}
-              className="bg-[#00A9B5] text-white text-center py-2.5 rounded-md font-medium"
-            >
-              Sign Up
-            </Link>
+            {user ? (
+              <>
+                <Link
+                  href="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2 text-gray-700 font-semibold py-1"
+                >
+                  <User className="w-4 h-4 text-[#00A9B5]" />
+                  <span>{user.name || "Profile"}</span>
+                </Link>
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleSignOut();
+                  }}
+                  className="flex items-center gap-2 text-red-500 py-1 text-left"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Sign Out</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-gray-700 py-1"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="bg-[#00A9B5] text-white text-center py-2.5 rounded-md font-medium"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
